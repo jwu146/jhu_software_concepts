@@ -1,14 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Home - My Website{% endblock %}
+
 {% block content %}
-<div class="home-bio">
-    <div class="bio-text">
-        <h1>Your Name</h1>
-        <h2>Your Position</h2>
-        <p>Your bio goes here...</p>
-    </div>
-    <div class="bio-photo">
-        <img src="{{ url_for('static', filename='images/your_photo.jpg') }}" alt="Your Photo">
+<div class="main-container">
+    <h1>About Me!</h1>
+    <div class="main-content">
+        <div class="bio-text">
+            <h2>Jonathan Wu</h2>
+            <h3>Data Scientist I @ Sibel Health</h3>
+            <p>Jonathan Wu is currently working as a Data Scientist at Sibel Health with a mission to deliver Better Health Data for All®.
+                He has a bachelor's and master's of science in Biomedical Engineering (BME) from Johns Hopkins University.
+                He is passionate about all things healthcare and innovation, and hopes to use his skills to make an impact on medical care and public health.
+            </p>
+        </div>
+        <div class="bio-photo">
+            <img src="{{ url_for('static', filename='images/profile_pic.png') }}" alt="Jonathan's Photo">
+        </div>
     </div>
 </div>
 {% endblock %}

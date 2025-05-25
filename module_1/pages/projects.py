@@ -4,4 +4,4 @@ projects_bp = Blueprint("projects", __name__)
 
 @projects_bp.route("/")
 def projects() -> str:
-    return render_template("projects.html")
+    return render_template("projects.html", current="projects")

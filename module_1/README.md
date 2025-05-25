@@ -39,4 +39,7 @@ With the environment setup, open [http://localhost:8000](http://localhost:8000) 
 
 ## References used: 
 
-* [Real Python: Flask Project Setup](https://realpython.com/flask-project/)
+* **General Overview of how to build a Flask Web Project:** [Real Python: Build a Scalable Flask Web Project From Scratch](https://realpython.com/flask-project/)
+
+* **How to use Flask Blueprints:** [Real Python: Use a Flask Blueprint to Architect Your Applications](https://realpython.com/flask-blueprint/)
+

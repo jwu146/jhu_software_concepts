@@ -1,0 +1,35 @@
+.navbar ul {
+    list-style-type: none;
+    float: right;
+    margin: 0;
+    padding: 0;
+    background-color: #004aad; /* Example unique color */
+}
+.navbar ul li {
+    display: inline-block;
+    margin-left: 20px;
+}
+.navbar ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 4px;
+}
+.navbar ul li a.active, .navbar ul li a:hover {
+    background-color: #eab308; /* Highlight color for active tab */
+    color: #004aad;
+}
+
+.home-bio {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+}
+.bio-text {
+    flex: 1;
+    padding-right: 40px;
+}
+.bio-photo img {
+    width: 200px;
+    border-radius: 10px;
+}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Home - My Website{% endblock %}
+{% block content %}
+<div class="home-bio">
+    <div class="bio-text">
+        <h1>Your Name</h1>
+        <h2>Your Position</h2>
+        <p>Your bio goes here...</p>
+    </div>
+    <div class="bio-photo">
+        <img src="{{ url_for('static', filename='images/your_photo.jpg') }}" alt="Your Photo">
+    </div>
+</div>
+{% endblock %}

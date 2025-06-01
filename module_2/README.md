@@ -1,5 +1,5 @@
 # Module 2: Web Scraping (Due: 2025-06-01 23:59:00)
-**Authored by:** Jonathan Wu (jwu146)
+**Authored by:** Jonathan Wu *(jwu146)*
 
 ## Quick Start
 This project uses **uv** for dependency management, but a `requirements.txt` file is also provided

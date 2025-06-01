@@ -13,7 +13,6 @@ def _save_scraped_data(raw_data:list[list[str]], savepath:Path) -> None:
     """
     with open(savepath, "w", encoding="utf-8") as f:
         json.dump(raw_data, f, ensure_ascii=False, indent=2)
-    return None
 
 def _scrape_data(pages:int=500) -> list[list[str]]: # 20 entries per page, default 500 pages for min 10_000 applicant entries
     """Scrapes applicant data from The GradCafe admissions results pages.
@@ -78,7 +77,6 @@ def scrape_data(savepath:Path, pages:int=500) -> None:
     _save_scraped_data(raw_data, savepath)
     
     print(f"Scraped and saved {len(raw_data)} applicants.")
-    return None
     
 if __name__ == "__main__":
     savepath = Path(__file__).parents[1] / "data" / "raw_data.json"

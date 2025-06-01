@@ -1,37 +1,29 @@
 import json
-import re
-from bs4 import BeautifulSoup
-from utils import *
+from pathlib import Path
+from utils import _extract_applicant_fields
 
-def load_data(filepath="raw_data.json"):
+def load_data(filepath:Path) -> list[list[str]]:
+    """Loads raw applicant data from a JSON file."""
     with open(filepath, "r", encoding="utf-8") as f:
-        raw_entries = json.load(f)
-    return raw_entries
+        raw_data = json.load(f)
+    return raw_data
 
-def clean_data(raw_entries):
-    cleaned = []
-    for row_html in raw_entries:
-        soup = BeautifulSoup(row_html, "html.parser")
-        # Extract and clean each required field
-        program_name = _extract_program_name(soup)
-        # Repeat for each field...
-        entry = {
-            "program_name": program_name,
-            # ...
-        }
-        cleaned.append(entry)
-    return cleaned
+def save_data(cleaned_data:list[dict], savepath:Path) -> None:
+    """Saves cleaned applicant data (list of dicts) to a JSON file."""
+    with open(savepath, "w", encoding="utf-8") as f:
+        json.dump(cleaned_data, f, indent=2, ensure_ascii=False)
+        
+def clean_data(savepath:Path, datapath:Path) -> None:
+    """Cleans raw applicant data and saves the structured results."""
+    raw_data = load_data(datapath)
 
-def _extract_program_name(soup):
-    # Example: use bs4/string/regex to get the text you need
-    # return soup.select_one("td.program_name_selector").get_text(strip=True)
-    pass
-
-def save_data(cleaned, filepath="applicant_data.json"):
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(cleaned, f, indent=2, ensure_ascii=False)
+    cleaned_data = []
+    for applicant_data in raw_data:
+        extracted_data = _extract_applicant_fields(applicant_data)
+        cleaned_data.append(extracted_data) 
+    save_data(cleaned_data, savepath)
 
 if __name__ == "__main__":
-    raw_entries = load_data()
-    cleaned_entries = clean_data(raw_entries)
-    save_data(cleaned_entries)
+    savepath = Path(__file__).parents[1] / "data" / "applicant_data.json"
+    datapath = Path(__file__).parents[1] / "data" / "raw_data.json"
+    clean_data(savepath, datapath)

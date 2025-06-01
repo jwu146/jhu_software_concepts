@@ -14,7 +14,7 @@ def _save_scraped_data(raw_data:list[list[str]], savepath:Path) -> None:
     with open(savepath, "w", encoding="utf-8") as f:
         json.dump(raw_data, f, ensure_ascii=False, indent=2)
 
-def _scrape_data(pages:int=500) -> list[list[str]]: # 20 entries per page, default 500 pages for min 10_000 applicant entries
+def _scrape_data(pages:int=750) -> list[list[str]]:
     """Scrapes applicant data from The GradCafe admissions results pages.
 
     For each page, this function finds the applicant table and groups rows into applicants:
@@ -25,7 +25,7 @@ def _scrape_data(pages:int=500) -> list[list[str]]: # 20 entries per page, defau
     Each applicant is stored as a list of HTML strings (one for each row belonging to that applicant).
 
     Args:
-        pages: Number of result pages to scrape (default 500).
+        pages: Number of result pages to scrape (default 750).
 
     Returns:
         List of applicants, each being a list of row HTML strings.
@@ -66,12 +66,12 @@ def _scrape_data(pages:int=500) -> list[list[str]]: # 20 entries per page, defau
             raw_data.append([str(r) for r in curr_applicant])
     return raw_data
 
-def scrape_data(savepath:Path, pages:int=500) -> None:
+def scrape_data(savepath:Path, pages:int=750) -> None:
     """Orchestrates scraping and saving of applicant data.
 
     Args:
         savepath: Path to save the output JSON file.
-        pages: Number of result pages to scrape. Default is 500.
+        pages: Number of result pages to scrape. Default is 750.
     """
     raw_data = _scrape_data(pages)
     _save_scraped_data(raw_data, savepath)

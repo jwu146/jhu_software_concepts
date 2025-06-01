@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from utils import _extract_applicant_fields
+from .utils import _extract_applicant_fields
 
 def load_data(filepath:Path) -> list[list[str]]:
     """Loads raw applicant data from a JSON file."""

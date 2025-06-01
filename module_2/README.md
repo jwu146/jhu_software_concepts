@@ -60,7 +60,7 @@ The goal of this project is to programmatically scrape graduate applicant result
 ### **Scraping Process**
 
 1. **URL and Pagination:**
-   The script constructs URLs for each results page (e.g., `https://www.thegradcafe.com/survey/?page=1`, etc.) and iterates through a specified number of pages, with a default of 500 pages to target a minimum of 10,000 applicants (20 applicants per page).
+   The script constructs URLs for each results page (e.g., `https://www.thegradcafe.com/survey/?page=1`, etc.) and iterates through a specified number of pages, with a default of 750 pages to surpass the minimum of 10,000 applicants (20 applicants per page).
 
 2. **Downloading HTML:**
    For each page, the script uses `urllib3.PoolManager` to make GET requests and downloads the HTML. The results table with applicant data is located by finding the `<tbody>` element on the page.

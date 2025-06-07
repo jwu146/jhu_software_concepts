@@ -76,46 +76,40 @@ Before running queries, ensure your `applicant_data.json` file is in the `data/`
 Run the following command to create the table and load the data (you can provide your own database credentials if needed):
 
 If using pip:
-
-    ```bash
-    python load_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
-    ```
+```bash
+python load_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
+```
 
 If using uv:
-
-    ```bash
-    uv run load_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
-    ```
+```bash
+uv run load_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
+```
 
 ### 2. **Query the Data**
 
 If using pip:
-
-    ```bash
-    python query_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
-    ```
+```bash
+python query_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
+```
 
 If using uv:
-
-    ```bash
-    uv run query_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
-    ```
+```bash
+uv run query_data.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
+```
 
 This script will connect to your database and print answers to the assignment questions. The queries are organized in separate functions for clarity and ease of extension.
 
 ### 3. **See Queries in Flask Page**
 
 If using pip:
-
-    ```bash
-    python app.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
-    ```
+```bash
+python app.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
+```
 
 If using uv:
-
-    ```bash
-    uv run app.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
-    ```
+```bash
+uv run app.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
+```
 
 ## Other Notes
 Both query rationale and limitations essay are included in the `limitations.pdf` document in the project's root directory.

@@ -22,6 +22,11 @@ This project uses **uv** for dependency management, but a `requirements.txt` fil
     ```bash
     uv run query_data.py
     ```
+
+5. To see the flask page, run:
+    ```bash
+    uv run app.py
+    ```
 -----
 
 ### Using **pip** and `requirements.txt`:
@@ -39,6 +44,11 @@ This project uses **uv** for dependency management, but a `requirements.txt` fil
 3. To get answers to the questions listed in the assignment, from the project root, run:
     ```bash
     python query_data.py
+    ```
+
+4. To see the flask page, run:
+    ```bash
+    python app.py
     ```
 
 -----
@@ -93,5 +103,19 @@ If using uv:
 
 This script will connect to your database and print answers to the assignment questions. The queries are organized in separate functions for clarity and ease of extension.
 
+### 3. **See Queries in Flask Page**
+
+If using pip:
+
+    ```bash
+    python app.py
+    ```
+
+If using uv:
+
+    ```bash
+    uv run app.py
+    ```
+
 ## Other Notes
-Answers to the queries can be found under the projects section of the webpage created in module 1. Both query rationale and limitations essay are included in the `limitations.pdf` document in the project's root directory.
+Both query rationale and limitations essay are included in the `limitations.pdf` document in the project's root directory.

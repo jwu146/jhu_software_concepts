@@ -108,13 +108,13 @@ This script will connect to your database and print answers to the assignment qu
 If using pip:
 
     ```bash
-    python app.py
+    python app.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
     ```
 
 If using uv:
 
     ```bash
-    uv run app.py
+    uv run app.py --db_name=your_db --db_user=your_user --db_password=your_password --db_host=localhost --db_port=5432
     ```
 
 ## Other Notes

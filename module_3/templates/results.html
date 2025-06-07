@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grad Cafe Analytics Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Grad Cafe Analytics Results</h1>
+    <dl>
+        <dt># Applicants (Spring 2025):</dt><dd>{{ spring_2025_count }}</dd>
+        <dt>% International (all):</dt><dd>{{ percent_international }}%</dd>
+        <dt>Avg. GPA (all):</dt><dd>{{ avg_gpa }}</dd>
+        <dt>Avg. GRE (all):</dt><dd>{{ avg_gre }}</dd>
+        <dt>Avg. GRE V (all):</dt><dd>{{ avg_gre_v }}</dd>
+        <dt>Avg. GRE AW (all):</dt><dd>{{ avg_gre_aw }}</dd>
+        <dt>Avg. GPA (American, Spring 2025):</dt><dd>{{ avg_gpa_american }}</dd>
+        <dt>% Acceptances (Spring 2025):</dt><dd>{{ percent_accept_spring }}%</dd>
+        <dt>Avg. GPA (Accepted, Spring 2025):</dt><dd>{{ avg_gpa_accepted }}</dd>
+        <dt># JHU MS Computer Science:</dt><dd>{{ jhu_cs_masters }}</dd>
+    </dl>
+    <div class="footer">Data sourced from Grad Cafe | For EN.605.256.8VL.SU25 Module 3</div>
+</div>
+</body>
+</html>

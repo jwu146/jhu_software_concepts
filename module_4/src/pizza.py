@@ -1,4 +1,18 @@
 class Pizza:
+    """
+    Represents a customizable pizza with crust, sauce, cheese, and toppings.
+
+    :cvar dict CRUST_COST: Cost associated with each crust type.
+    :cvar dict SAUCE_COST: Cost associated with each sauce.
+    :cvar dict TOPPING_COST: Cost associated with each topping.
+    :cvar str CHEESE: Default cheese type.
+    :cvar int CHEESE_COST: Cost for cheese (included by default).
+    :ivar str crust: Selected crust type for the pizza.
+    :ivar list sauce: List of selected sauces.
+    :ivar str cheese: Selected cheese (defaults to mozzarella).
+    :ivar list toppings: List of selected toppings.
+    """
+
     CRUST_COST = {
         "thin": 5,
         "thick": 6,
@@ -19,8 +33,14 @@ class Pizza:
 
     def __init__(self, *ingredients):
         """
-        Allows flexible input: Pizza("thin", "liv_sauce", "pesto", "mozzarella", "mushrooms", "pepperoni")
-        Categorizes ingredients into crust, sauces, cheese, toppings and initializes pizza object.
+        Initializes a Pizza object from a flexible set of ingredients.
+
+        Categorizes each ingredient as a crust, sauce, cheese, or topping.
+        Raises ValueError if required components are missing.
+
+        :param ingredients: Variable number of strings representing ingredients.
+        :type ingredients: str
+        :raises ValueError: If any required pizza component is missing.
         """
         self.crust = None
         self.sauce = []
@@ -49,12 +69,22 @@ class Pizza:
             raise ValueError("A valid crust is required")
 
     def __str__(self):
-        """Returns string of the pizza and the cost."""
+        """
+        Returns a string representation of the pizza, including the cost.
+
+        :return: Description of the pizza and its total cost.
+        :rtype: str
+        """
         return (f"Crust: {self.crust}, Sauce: {self.sauce}, Cheese: {self.cheese}, Toppings: {self.toppings}, "
                 f"Cost: {self.cost()}")
 
     def cost(self) -> int:
-        """Calculates the cost of the pizza."""
+        """
+        Calculates the cost of the pizza based on selected options.
+
+        :return: The total cost of the pizza.
+        :rtype: int
+        """
         total = 0
         total += self.CRUST_COST.get(self.crust, 0)
         total += sum(self.SAUCE_COST.get(s, 0) for s in self.sauce)

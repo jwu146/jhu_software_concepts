@@ -3,16 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-module_4 documentation
+src package
 ======================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+Submodules
+----------------------
+
+src.order module
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: src.order
    :members:
-   
+
+src.pizza module
+^^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: src.pizza
    :members:
 

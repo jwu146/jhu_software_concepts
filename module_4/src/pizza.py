@@ -1,18 +1,13 @@
 class Pizza:
     """
-    Represents a customizable pizza with crust, sauce, cheese, and toppings.
+    Represents a limited-customizable pizza with unordered ingredient types: crust, sauce, cheese, and toppings.
+    :ivar str crust: Select ONE crust type for the pizza (thin, thick, gluten_free).
+    :ivar str sauce: Select AT LEAST ONE sauce type for the pizza (marinara, pesto, liv_sauce).
+    :ivar str cheese, optional: Select cheese type for the pizza (defaults to mozzarella).
+    :ivar str toppings: Select AT LEAST ONE toppings type for the pizza (pineapple, pepperoni, mushrooms).
 
-    :cvar dict CRUST_COST: Cost associated with each crust type.
-    :cvar dict SAUCE_COST: Cost associated with each sauce.
-    :cvar dict TOPPING_COST: Cost associated with each topping.
-    :cvar str CHEESE: Default cheese type.
-    :cvar int CHEESE_COST: Cost for cheese (included by default).
-    :ivar str crust: Selected crust type for the pizza.
-    :ivar list sauce: List of selected sauces.
-    :ivar str cheese: Selected cheese (defaults to mozzarella).
-    :ivar list toppings: List of selected toppings.
+    Raises ValueError if required components are missing.
     """
-
     CRUST_COST = {
         "thin": 5,
         "thick": 6,
@@ -33,14 +28,8 @@ class Pizza:
 
     def __init__(self, *ingredients):
         """
-        Initializes a Pizza object from a flexible set of ingredients.
-
+        Initializes a Pizza object from a flexible set of unordered ingredients.
         Categorizes each ingredient as a crust, sauce, cheese, or topping.
-        Raises ValueError if required components are missing.
-
-        :param ingredients: Variable number of strings representing ingredients.
-        :type ingredients: str
-        :raises ValueError: If any required pizza component is missing.
         """
         self.crust = None
         self.sauce = []
@@ -51,6 +40,8 @@ class Pizza:
             ing_str = str(ing)
             if ing_str in self.CRUST_COST and self.crust is None:
                 self.crust = ing_str
+            elif ing_str in self.CRUST_COST and self.crust is not None:
+                raise ValueError(f"Multiple crusts selected: {self.crust} and {ing_str}. Please select only one crust.")
             elif ing_str in self.SAUCE_COST:
                 self.sauce.append(ing_str)
             elif ing_str == self.CHEESE:
@@ -71,9 +62,6 @@ class Pizza:
     def __str__(self):
         """
         Returns a string representation of the pizza, including the cost.
-
-        :return: Description of the pizza and its total cost.
-        :rtype: str
         """
         return (f"Crust: {self.crust}, Sauce: {self.sauce}, Cheese: {self.cheese}, Toppings: {self.toppings}, "
                 f"Cost: {self.cost()}")
@@ -90,4 +78,4 @@ class Pizza:
         total += sum(self.SAUCE_COST.get(s, 0) for s in self.sauce)
         total += self.CHEESE_COST
         total += sum(self.TOPPING_COST.get(t, 0) for t in self.toppings)
-        return total
+        return int(total)

@@ -1,4 +1,4 @@
-from pizza import Pizza
+from src.pizza import Pizza
 
 class Order:
     """
@@ -15,9 +15,6 @@ class Order:
     def __init__(self):
         """
         Initializes an empty order.
-
-        Sets up an empty list of pizzas, initializes the cost to zero,
-        and marks the order as unpaid.
         """
         self.pizzas = []
         self.cost = 0
@@ -26,10 +23,6 @@ class Order:
     def __str__(self):
         """
         Returns a string showing the customer's complete order.
-
-        :return: A formatted string representing all pizzas in the order.
-            If the order is empty, indicates no pizzas in the order.
-        :rtype: str
         """
         if not self.pizzas:
             pizzas_str = "No pizzas in this order."
@@ -45,9 +38,8 @@ class Order:
         """
         Adds a pizza to the order, categorizing ingredients automatically.
 
-        :param ingredients: Ingredients for the Pizza (order doesn't matter).
+        :param ingredients: Ingredients for the Pizza (order doesn't matter). See Pizza class for ingredient details.
         :type ingredients: str
-        :return: None
         """
         pizza = Pizza(*ingredients)
         self.pizzas.append(pizza)
@@ -56,9 +48,5 @@ class Order:
     def order_paid(self):
         """
         Marks the order as paid.
-
-        Sets the 'paid' attribute to True.
-
-        :return: None
         """
         self.paid = True

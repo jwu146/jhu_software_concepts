@@ -1,10 +1,10 @@
 class Pizza:
     """
     Represents a limited-customizable pizza with unordered ingredient types: crust, sauce, cheese, and toppings.
-    
+
     :ivar str crust: Select ONE crust type for the pizza (thin, thick, gluten_free).
     :ivar str sauce: Select AT LEAST ONE sauce type for the pizza (marinara, pesto, liv_sauce).
-    :ivar str cheese, optional: Select cheese type for the pizza (defaults to mozzarella).
+    :ivar str cheese: Select cheese type for the pizza (mozzarella).
     :ivar str toppings: Select AT LEAST ONE toppings type for the pizza (pineapple, pepperoni, mushrooms).
 
     Raises ValueError if required components are missing.

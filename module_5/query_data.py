@@ -2,20 +2,12 @@
 
 import argparse
 import psycopg2
+from psycopg2 import sql
+
+LIMIT = 100
 
 def create_connection(db_name, db_user, db_password, db_host, db_port):
-    """Creates a connection to a PostgreSQL database.
-
-    Args:
-        db_name (str): Name of the database.
-        db_user (str): Username for authentication.
-        db_password (str): Password for authentication.
-        db_host (str): Hostname or IP address of the database server.
-        db_port (str or int): Port number of the database server.
-
-    Returns:
-        connection: psycopg2 connection object if successful, else None.
-    """
+    """Creates a connection to a PostgreSQL database."""
     try:
         connection = psycopg2.connect(
             dbname=db_name,
@@ -31,153 +23,193 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
         return None
 
 def count_spring_2025_entries(connection):
-    """Counts number of applicants for Spring 2025.
-
-    Original Question: How many entries do you have in your database who have
-    applied for Fall 2024?
-    """
+    """Counts number of applicants for Spring 2025."""
     cursor = connection.cursor()
-    cursor.execute("""
-        SELECT COUNT(*) FROM applicants
-        WHERE term ILIKE '%Spring 2025%'
-    """)
+    query = sql.SQL(
+        "SELECT COUNT(*) FROM {table} WHERE {col} ILIKE {pattern} LIMIT {limit}"
+    ).format(
+        table=sql.Identifier('applicants'),
+        col=sql.Identifier('term'),
+        pattern=sql.Literal('%Spring 2025%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query)
     result = cursor.fetchone()[0]
     cursor.close()
-    print(f"Entries for Spring 2025: {result}")
     return result
 
 def percent_international(connection):
-    """Calculates percentage of international students (not American or Other).
-
-    Original Question: What percentage of entries are from international students
-    (not American or Other) (to two decimal places)?
-    """
+    """Calculates percentage of international students (not American or Other)."""
     cursor = connection.cursor()
-    cursor.execute("""
-        SELECT COUNT(*) FROM applicants
-        WHERE us_or_international ILIKE '%International%'
-    """)
+    # International count
+    query_intl = sql.SQL(
+        "SELECT COUNT(*) FROM {table} WHERE {col} ILIKE {pattern} LIMIT {limit}"
+    ).format(
+        table=sql.Identifier('applicants'),
+        col=sql.Identifier('us_or_international'),
+        pattern=sql.Literal('%International%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query_intl)
     international = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM applicants")
+    # Total count
+    query_total = sql.SQL(
+        "SELECT COUNT(*) FROM {table} LIMIT {limit}"
+    ).format(
+        table=sql.Identifier('applicants'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query_total)
     total = cursor.fetchone()[0]
     percent = (international / total) * 100 if total > 0 else 0
     cursor.close()
-    print(f"Percentage of international students: {percent:.2f}%")
     return round(percent, 2)
 
 def average_metrics(connection):
-    """Finds the average GPA, GRE, GRE V, and GRE AW for applicants who provided
-    each metric.
-
-    For each metric, calculates the average using only applicants who provided that
-    metric. Original Question: What is the average GPA, GRE, GRE V, GRE AW of
-    applicants who provide these metrics?
-    """
+    """Finds the average GPA, GRE, GRE V, and GRE AW for applicants who provided each metric."""
     cursor = connection.cursor()
-    cursor.execute("SELECT AVG(gpa) FROM applicants WHERE gpa IS NOT NULL")
-    gpa = cursor.fetchone()[0]
-    cursor.execute("SELECT AVG(gre) FROM applicants WHERE gre IS NOT NULL")
-    gre = cursor.fetchone()[0]
-    cursor.execute("SELECT AVG(gre_v) FROM applicants WHERE gre_v IS NOT NULL")
-    gre_v = cursor.fetchone()[0]
-    cursor.execute("SELECT AVG(gre_aw) FROM applicants WHERE gre_aw IS NOT NULL")
-    gre_aw = cursor.fetchone()[0]
+    metrics = {}
+    for col in ['gpa', 'gre', 'gre_v', 'gre_aw']:
+        query = sql.SQL(
+            "SELECT AVG({col}) FROM {table} WHERE {col} IS NOT NULL LIMIT {limit}"
+        ).format(
+            col=sql.Identifier(col),
+            table=sql.Identifier('applicants'),
+            limit=sql.Literal(LIMIT),
+        )
+        cursor.execute(query)
+        metrics[col] = cursor.fetchone()[0]
     cursor.close()
-    print(
-        f"Average GPA: {gpa:.2f}, GRE: {gre:.2f}, "
-        f"GRE V: {gre_v:.2f}, GRE AW: {gre_aw:.2f}"
-    )
-    return gpa, gre, gre_v, gre_aw
+    return metrics['gpa'], metrics['gre'], metrics['gre_v'], metrics['gre_aw']
 
 def average_gpa_american_spring_2025(connection):
-    """Finds average GPA of American students who applied for Spring 2025.
-
-    Original Question: What is their average GPA of American students in
-    Fall 2024?
-    """
+    """Finds average GPA of American students who applied for Spring 2025."""
     cursor = connection.cursor()
-    cursor.execute("""
-        SELECT AVG(gpa)
-        FROM applicants
-        WHERE us_or_international ILIKE '%American%'
-        AND term ILIKE '%Spring 2025%'
-        AND gpa IS NOT NULL
-    """)
+    query = sql.SQL("""
+        SELECT AVG({gpa}) FROM {table}
+        WHERE {nation} ILIKE {american}
+        AND {term_col} ILIKE {term}
+        AND {gpa} IS NOT NULL
+        LIMIT {limit}
+    """).format(
+        gpa=sql.Identifier('gpa'),
+        table=sql.Identifier('applicants'),
+        nation=sql.Identifier('us_or_international'),
+        american=sql.Literal('%American%'),
+        term_col=sql.Identifier('term'),
+        term=sql.Literal('%Spring 2025%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query)
     result = cursor.fetchone()[0]
     cursor.close()
-    print(f"Average GPA (American, Spring 2025): {result:.2f}")
     return result
 
 def percent_acceptances_spring_2025(connection):
-    """Percent of Spring 2025 entries that are Acceptances.
-
-    Original Question: What percent of entries for Fall 2024 are Acceptances
-    (to two decimal places)?
-    """
+    """Percent of Spring 2025 entries that are Acceptances."""
     cursor = connection.cursor()
-    cursor.execute("""
-        SELECT COUNT(*) FROM applicants
-        WHERE term ILIKE '%Spring 2025%'
-    """)
+    # Total
+    query_total = sql.SQL(
+        "SELECT COUNT(*) FROM {table} WHERE {term_col} ILIKE {term} LIMIT {limit}"
+    ).format(
+        table=sql.Identifier('applicants'),
+        term_col=sql.Identifier('term'),
+        term=sql.Literal('%Spring 2025%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query_total)
     total = cursor.fetchone()[0]
-    cursor.execute("""
-        SELECT COUNT(*) FROM applicants
-        WHERE term ILIKE '%Spring 2025%'
-        AND status ILIKE '%Accepted%'
-    """)
+    # Accepted
+    query_accepted = sql.SQL("""
+        SELECT COUNT(*) FROM {table}
+        WHERE {term_col} ILIKE {term}
+        AND {status_col} ILIKE {status}
+        LIMIT {limit}
+    """).format(
+        table=sql.Identifier('applicants'),
+        term_col=sql.Identifier('term'),
+        term=sql.Literal('%Spring 2025%'),
+        status_col=sql.Identifier('status'),
+        status=sql.Literal('%Accepted%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query_accepted)
     accepted = cursor.fetchone()[0]
     percent = (accepted / total) * 100 if total > 0 else 0
     cursor.close()
-    print(f"Percent Acceptances (Spring 2025): {percent:.2f}%")
     return round(percent, 2)
 
 def average_gpa_accepted_spring_2025(connection):
-    """Average GPA of accepted applicants who applied for Spring 2025.
-
-    Original Question: What is the average GPA of applicants who applied for
-    Fall 2024 who are Acceptances?
-    """
+    """Average GPA of accepted applicants who applied for Spring 2025."""
     cursor = connection.cursor()
-    cursor.execute("""
-        SELECT AVG(gpa)
-        FROM applicants
-        WHERE term ILIKE '%Spring 2025%'
-        AND status ILIKE '%Accepted%'
-        AND gpa IS NOT NULL
-    """)
+    query = sql.SQL("""
+        SELECT AVG({gpa}) FROM {table}
+        WHERE {term_col} ILIKE {term}
+        AND {status_col} ILIKE {status}
+        AND {gpa} IS NOT NULL
+        LIMIT {limit}
+    """).format(
+        gpa=sql.Identifier('gpa'),
+        table=sql.Identifier('applicants'),
+        term_col=sql.Identifier('term'),
+        term=sql.Literal('%Spring 2025%'),
+        status_col=sql.Identifier('status'),
+        status=sql.Literal('%Accepted%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query)
     result = cursor.fetchone()[0]
     cursor.close()
-    print(f"Average GPA (Accepted, Spring 2025): {result:.2f}")
     return result
 
 def count_jhu_cs_masters(connection):
-    """Counts entries for JHU, masters, Computer Science.
-
-    Original Question: How many entries are from applicants who applied to
-    JHU for a masters degrees in Computer Science?
-    """
+    """Counts entries for JHU, masters, Computer Science."""
     cursor = connection.cursor()
-    cursor.execute("""
-        SELECT COUNT(*) FROM applicants
-        WHERE (university ILIKE '%JHU%'
-                OR university ILIKE '%Johns Hopkins%'
-                OR university ILIKE '%John Hopkins%'
-                OR university ILIKE '%John Hopkin%'
-                OR university ILIKE '%Johns Hopkin%')
-        AND (degree ILIKE '%Master%' OR degree ILIKE '%MS%'
-             OR degree ILIKE '%Masters%')
-        AND program ILIKE '%Computer Science%'
-    """)
+    jhu_conditions = [
+        sql.SQL("{univ} ILIKE {val}").format(
+            univ=sql.Identifier('university'),
+            val=sql.Literal(pattern)
+        ) for pattern in [
+            '%JHU%', '%Johns Hopkins%', '%John Hopkins%', '%John Hopkin%', '%Johns Hopkin%'
+        ]
+    ]
+    degree_conditions = [
+        sql.SQL("{deg} ILIKE {val}").format(
+            deg=sql.Identifier('degree'),
+            val=sql.Literal(pattern)
+        ) for pattern in [
+            '%Master%', '%MS%', '%Masters%'
+        ]
+    ]
+    where_clause = (
+        sql.SQL("(")
+        + sql.SQL(" OR ").join(jhu_conditions)
+        + sql.SQL(") AND (")
+        + sql.SQL(" OR ").join(degree_conditions)
+        + sql.SQL(")")
+    )
+    query = sql.SQL("""
+        SELECT COUNT(*) FROM {table}
+        WHERE {where_clause}
+        AND {prog} ILIKE {cs}
+        LIMIT {limit}
+    """).format(
+        table=sql.Identifier('applicants'),
+        where_clause=where_clause,
+        prog=sql.Identifier('program'),
+        cs=sql.Literal('%Computer Science%'),
+        limit=sql.Literal(LIMIT),
+    )
+    cursor.execute(query)
     result = cursor.fetchone()[0]
     cursor.close()
-    print(f"JHU Masters Computer Science applicants: {result}")
     return result
 
 def parse_args():
-    """Parses command-line arguments for database credentials.
+    """Parses command-line arguments for DB connection.
 
     Returns:
-        argparse.Namespace: Parsed command-line arguments.
+        Namespace: Parsed command-line arguments.
     """
     parser = argparse.ArgumentParser(description="Query applicant data from PostgreSQL.")
     parser.add_argument('--db_name', default='postgres', help='Database name')
@@ -198,13 +230,19 @@ def main():
         db_port=args.db_port
     )
     if db_conn:
-        count_spring_2025_entries(db_conn)
-        percent_international(db_conn)
-        average_metrics(db_conn)
-        average_gpa_american_spring_2025(db_conn)
-        percent_acceptances_spring_2025(db_conn)
-        average_gpa_accepted_spring_2025(db_conn)
-        count_jhu_cs_masters(db_conn)
+        print(f"Entries for Spring 2025: {count_spring_2025_entries(db_conn)}")
+        print(f"Percentage of international students: {percent_international(db_conn)}")
+        metrics = average_metrics(db_conn)
+        print(f"Average GPA: {metrics[0]:.2f}, "
+              f"GRE: {metrics[1]:.2f}, "
+              f"GRE V: {metrics[2]:.2f}, "
+              f"GRE AW: {metrics[3]:.2f} ")
+        print(f"Average GPA (American, Spring 2025): "
+              f"{average_gpa_american_spring_2025(db_conn):.2f}")
+        print(f"Percent Acceptances (Spring 2025): {percent_acceptances_spring_2025(db_conn):.2f}")
+        print(f"Average GPA (Accepted, Spring 2025): "
+              f"{average_gpa_accepted_spring_2025(db_conn):.2f}")
+        print(f"JHU Masters Computer Science applicants: {count_jhu_cs_masters(db_conn)}")
         db_conn.close()
 
 if __name__ == "__main__":

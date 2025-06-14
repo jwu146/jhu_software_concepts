@@ -1,10 +1,12 @@
-import psycopg2
+"""Module for loading applicant data into a PostgreSQL database."""
+
 import json
 import argparse
 from pathlib import Path
+import psycopg2
 from psycopg2 import OperationalError
 
-insert_query = """
+INSERT_QUERY = """
     INSERT INTO applicants (
         p_id, program, university, comments, date_added, url, status, date_decision, term,
         us_or_international, gpa, gre, gre_v, gre_aw, degree
@@ -104,16 +106,8 @@ def insert_data(connection, data):
         None
     """
     cursor = connection.cursor()
-    insert_query = """
-        INSERT INTO applicants (
-            p_id, program, university, comments, date_added, url, status, date_decision, term,
-            us_or_international, gre, gre_v, degree, gpa, gre_aw
-        )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ON CONFLICT (p_id) DO NOTHING;
-    """
     for i, applicant in enumerate(data):
-        cursor.execute(insert_query, (
+        cursor.execute(INSERT_QUERY, (
             i,
             applicant.get('program'),
             applicant.get('university'),
@@ -124,11 +118,11 @@ def insert_data(connection, data):
             applicant.get('date_decision'),
             applicant.get('term'),
             applicant.get('nationality'),
+            applicant.get('gpa'),
             applicant.get('gre'),
             applicant.get('gre_v'),
-            applicant.get('degree'),
-            applicant.get('gpa'),
-            applicant.get('gre_aw')
+            applicant.get('gre_aw'),
+            applicant.get('degree')
         ))
     connection.commit()
     print("Data inserted successfully.")
@@ -148,30 +142,35 @@ def parse_args():
     parser.add_argument('--db_port', default='5432', help='Database port')
     return parser.parse_args()
 
-def main(args):
-    #/ Connection to DB /#
+def main(cmd_args):
+    """Main entry point for loading data.
+
+    Args:
+        cmd_args: Parsed command-line arguments.
+
+    Returns:
+        None
+    """
     conn = create_connection(
-        db_name=args.db_name,
-        db_user=args.db_user,
-        db_password=args.db_password,
-        db_host=args.db_host,
-        db_port=args.db_port
+        db_name=cmd_args.db_name,
+        db_user=cmd_args.db_user,
+        db_password=cmd_args.db_password,
+        db_host=cmd_args.db_host,
+        db_port=cmd_args.db_port
     )
     if conn is None:
         print("Failed to connect to DB. Exiting.")
         return
 
-    #/ Create table /#
     create_table(conn)
 
-    #/ Load Data /#
     data_path = Path(__file__).parent / "data" / "applicant_data.json"
-    with open(data_path, 'r', encoding='utf-8') as f:
-        applicants = json.load(f)
+    with open(data_path, 'r', encoding='utf-8') as file:
+        applicants = json.load(file)
     insert_data(conn, applicants)
 
     conn.close()
-    
+
 if __name__ == "__main__":
-    args = parse_args()
-    main(args)
+    ARGS = parse_args()
+    main(ARGS)

@@ -16,3 +16,9 @@ Pizza prices are calculated using the following variables:
 - Sauce: Marinara ($2), Pesto ($3), Liv Sauce ($5)
 - Topping: Pineapple ($1), Pepperoni ($2), Mushrooms ($3)
 - Cheese: Mozzarella (always included)
+
+
+Read the documentation:
+https://jwu146-module-4.readthedocs.io/en/latest/
+
+Sphinx generated HTML can be found under ./build/html/index.html

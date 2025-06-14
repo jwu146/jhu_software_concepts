@@ -2,14 +2,7 @@ from src.pizza import Pizza
 
 class Order:
     """
-    Represents a pizza order by a customer.
-
-    :ivar pizzas: List of Pizza objects in the order.
-    :vartype pizzas: list of Pizza
-    :ivar cost: Total cost of the order.
-    :vartype cost: float
-    :ivar paid: Whether the order has been paid.
-    :vartype paid: bool
+    A class to place a pizza order by a customer.
     """
 
     def __init__(self):

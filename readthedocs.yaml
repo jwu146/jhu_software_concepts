@@ -1,0 +1,11 @@
+version: 2
+
+sphinx:
+  configuration: module_4/source/conf.py
+
+python:
+  version: "3.13"
+  install:
+    - method: pip
+      path: module_4
+    - requirements: module_4/source/requirements.txt
